@@ -16,8 +16,8 @@ module Upnp {
 
     export class IP {
         addresses(): Array<string> {
-            var addresses: Array<string> = [];
-            var interfaces = os.networkInterfaces();
+            let addresses: Array<string> = [];
+            let interfaces = os.networkInterfaces();
             for ( var int in interfaces ) {
                 for ( var virt in interfaces[int] ) {
                     let i = interfaces[int][virt];
@@ -37,7 +37,7 @@ module Upnp {
             this._url = URL.parse( this._endpoint );
         }
 
-        private _createBody( action: string, arg: any ): string {
+        private _createBody( action: string, arg: any ): Buffer {
             let b = '<?xml version="1.0"?>\n';
             b += '<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">\n';
             b += '\t<s:Body>\n';
@@ -48,11 +48,11 @@ module Upnp {
             b += '\t\t</u:' + action + '>\n';
             b += '\t</s:Body>\n'
             b += '</s:Envelope>';
-            return b;
+            return new Buffer.Buffer( b, 'utf8' );
         }
 
         post( action: string, data: any, cb: Function ) {
-            let body: string = this._createBody( action, data );
+            let body: Buffer = this._createBody( action, data );
             let opts: any = {
                 hostname: this._url.hostname,
                 port: this._url.port,
@@ -61,7 +61,7 @@ module Upnp {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'text/xml; charset="utf-8"',
-                    'Content-Length': Buffer.Buffer.byteLength( data ),
+                    'Content-Length': body.length,
                     'Connection': 'close',
                     'SOAPAction': JSON.stringify( this._ns + '#' + action )
                 }
@@ -74,6 +74,7 @@ module Upnp {
                 });
 
                 res.on( 'end', () => {
+                    //console.warn( 'received', resdata );
                     let d: any = xml( resdata );
                     let r: any = [];
                     for ( let val of d.root.children[0].children[0].children ) {
@@ -252,8 +253,25 @@ module Upnp {
     }
 
     export class SSDP extends events.EventEmitter {
+        private _skt: dgram.Socket;
         constructor( private _ip: string ) {
             super();
+            let __this: SSDP = this;
+            this._skt = dgram.createSocket( { type: 'udp4', reuseAddr: true }, function( msg: Buffer, rinfo: any ) {
+                //console.warn("got data:", msg.toString());
+                __this.processMessage( msg.toString(), rinfo );
+            });
+            this._skt.on( 'listening', function() {
+                //console.warn( "SSDP listenin on ", __this._skt.address().address, __this._skt.address().port )
+                //resolve promise here;
+                __this.emit( 'ready' );
+            });
+
+            this._skt.bind( SSDP_PORT, this._ip, function() {
+                //                __this._skt.setBroadcast( true );
+                //                __this._skt.setMulticastLoopback( true );
+                __this._skt.addMembership( BROADCAST_ADDR, __this._ip );
+            });
         }
         close( cb: Function ) {
             //this._server.close( cb )
@@ -281,26 +299,28 @@ module Upnp {
         }
 
         search( st: string ) {
-            let _sthis = this;
-            let message: string =
+            let __this = this;
+            let buf: Buffer = new Buffer.Buffer(
                 "M-SEARCH * HTTP/1.1\r\n" +
                 "HOST: " + BROADCAST_ADDR + ":" + SSDP_PORT + "\r\n" +
                 "MAN: \"ssdp:discover\"\r\n" +
-                "MX: 3\r\n" +
-                "ST: ssdp:" + st + "\r\n" +
-                "USER-AGENT: nodejs/" + process.version + " UPnP/2.0 draketv/2.0\r\n\r\n";
-            let skt: dgram.Socket = dgram.createSocket( { type: 'udp4', reuseAddr: true }, function( msg: Buffer, rinfo: any ) {
-                _sthis.processMessage( msg.toString(), rinfo );
+                "MX: 1\r\n" +
+                "ST: " + st + "\r\n" +
+                "USER-AGENT: nodejs/" + process.version + " UPnP/2.0 draketv/2.0\r\n\r\n", 'utf8' );
 
+            let skt2 = dgram.createSocket( { type: 'udp4', reuseAddr: true }, function( msg: Buffer, rinfo: any ) {
+                __this.processMessage( msg.toString(), rinfo );
             });
-
-            skt.on( 'listening', function() {
-                skt.send( message, 0, ( message.length ), SSDP_PORT, BROADCAST_ADDR, function() {
+            skt2.on( 'listening', function() {
+                //console.warn( "SSDP2 listening on ", skt2.address().address, skt2.address().port )
+                skt2.send( buf, 0, buf.length, SSDP_PORT, BROADCAST_ADDR, function( err ) {
+                    // skt2.close();
                 })
             });
-
-            skt.bind( SSDP_PORT, undefined, function() {
-                skt.addMembership( BROADCAST_ADDR, _sthis._ip );
+            skt2.bind( undefined, this._ip, function() {
+                //                skt2.setBroadcast( true );
+                //                skt2.setMulticastLoopback( true );
+                skt2.addMembership( BROADCAST_ADDR, __this._ip );
             });
 
         }
@@ -311,8 +331,12 @@ module Upnp {
         _ssdps: Array<SSDP> = [];
         _devices: Array<Device> = [];
 
+        constructor( opts?: any ) {
+            super();
+        }
+
         registerDevice( d: Device ): void {
-            let _this: Client = this;
+            let __this: Client = this;
             let found: boolean = false;
             for ( let device of this._devices ) {
                 if ( device.location == d.location ) {
@@ -322,15 +346,16 @@ module Upnp {
             }
             if ( !found ) {
                 d.discover( function() {
-                    _this._devices.push( d );
-                    _this.emit( 'newdevice', d );
-                    _this.emit( d.devicetype, d );
+                    __this._devices.push( d );
+                    __this.emit( 'newdevice', d );
+                    __this.emit( d.devicetype, d );
                 });
             }
         }
-        search() {
+        search( searchtype?: string ) {
             //create an ssdp for each ip;
-            let _this = this;
+            if ( !searchtype ) searchtype = 'ssdp:all';
+            let __this = this;
             let ipc: IP = new IP();
             let ips: any = ipc.addresses();
             for ( let ip of ips ) {
@@ -339,10 +364,12 @@ module Upnp {
 
             for ( let s of this._ssdps ) {
                 s.on( 'device', function( device: Device ) {
-                    _this.registerDevice( device );
+                    __this.registerDevice( device );
                 });
+                s.on( 'ready', function() {
 
-                s.search( 'all' );
+                    s.search( searchtype );
+                });
             }
         }
     }

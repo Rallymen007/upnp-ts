@@ -44,6 +44,7 @@ declare module Upnp {
     }
     class SSDP extends events.EventEmitter {
         private _ip;
+        private _skt;
         constructor(_ip: string);
         close(cb: Function): void;
         headersToObj(headers: string): Object;
@@ -53,8 +54,9 @@ declare module Upnp {
     class Client extends events.EventEmitter {
         _ssdps: Array<SSDP>;
         _devices: Array<Device>;
+        constructor(opts?: any);
         registerDevice(d: Device): void;
-        search(): void;
+        search(searchtype?: string): void;
     }
 }
 export = Upnp;
