@@ -1,0 +1,33 @@
+{
+  "name": "upnp",
+  "version": "0.0.1",
+  "description": "upnp for nodejs",
+  "main": "dist/index.js",
+  "scripts": {
+    "prepublish": "npm run tsc",
+    "test": "node test/test.js",
+    "tsc": "tsc --module commonjs",
+    "watch": "tsc -w --module commonjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://bitbucket.org/dthompso99/node-upnp.git"
+  },
+  "keywords": [
+    "upnp"
+  ],
+  "author": "Davin Thompson",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/dthompso99/node-upnp#readme",
+  "devDependencies": {
+    "ts-node": "^3.0.2",
+    "tsc-watch": "^1.0.8",
+    "typescript": "^2.5.1"
+  },
+  "dependencies": {
+    "@types/bluebird": "^3.5.8",
+    "@types/node": "^8.0.26",
+    "@types/xml-parser": "^1.2.29",
+    "xml-parser": "^1.2.1"
+  }
+}
