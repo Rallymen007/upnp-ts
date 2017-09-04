@@ -9,10 +9,11 @@
         "sourceMap": false,
         "inlineSourceMap": true,
         "declaration": true,
-        "sourceRoot": "lib",
+        "sourceRoot": "src",
         "outDir": "dist",
         "types": ["node"],
-        "typeRoots": [ "node_modules/@types" ]
+        "typeRoots": [ "node_modules/@types" ],
+		"removeComments": true
     },
     "exclude": [
         "dist",

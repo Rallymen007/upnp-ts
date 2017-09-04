@@ -1,3 +1,5 @@
+import xml = require( 'xml-parser' );
+
 import os = require( 'os' );
 import dgram = require( 'dgram' );
 import process = require( 'process' );
@@ -5,9 +7,6 @@ import Buffer = require( 'buffer' );
 import events = require( 'events' );
 import http = require( 'http' );
 import URL = require( 'url' );
-
-/* non node modules */
-import xml = require( 'xml-parser' );
 
 module Upnp {
 
