@@ -1,7 +1,7 @@
 {
-  "name": "upnp",
-  "version": "0.0.1",
-  "description": "upnp for nodejs",
+  "name": "upnp-ts",
+  "version": "0.0.2",
+  "description": "upnp for nodejs written in typescript",
   "main": "dist/index.js",
   "scripts": {
     "prepublish": "npm run tsc",
