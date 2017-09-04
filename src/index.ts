@@ -1,4 +1,4 @@
-import xml = require( 'xml-parser' );
+import xml = require( 'xml-parser/index.js' );
 
 import os = require( 'os' );
 import dgram = require( 'dgram' );
