@@ -1,6 +1,6 @@
 {
   "name": "upnp-ts",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "upnp for nodejs written in typescript",
   "main": "dist/index.js",
   "scripts": {
