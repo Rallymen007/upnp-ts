@@ -13,6 +13,7 @@ export declare class Device extends EventEmitter {
     constructor(_debug: {
         (d: any): void;
     }, network: string, msg: any, info: any);
+    getServices(): Array<Service>;
     update(d: Device): void;
     toString(): string;
     parseDeviceType(s: string): void;

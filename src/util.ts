@@ -1,4 +1,4 @@
-﻿import URL = require('url');
+import URL = require('url');
 import os = require('os');
 import { Buffer } from 'buffer';
 import xml = require('xml-parser/index.js');
@@ -61,7 +61,7 @@ export class USoap {
             let req = http.request(opts, (res: any) => {
                 res.setEncoding('utf8');
                 res.on('error', (e: any) => {
-                    console.warn('error posting to device');
+                    this._debug(['error posting to device'])
                 });
                 res.on('data', (chunk: string) => {
                     resdata += chunk;
@@ -83,14 +83,13 @@ export class USoap {
                 });
 
             });
-            req.on('error', (e) => {
-                console.warn('http error ', e);
+            req.on('error', (e:any) => {
+                this._debug(['http error ', e])
             });
-            this._debug(['usoap request', body.toString()]);
             req.write(body);
             req.end();
         } catch (e) {
-            console.warn('unknown error posting', e);
+            this._debug(['unknown error posting', e]);
         }
     }
 }

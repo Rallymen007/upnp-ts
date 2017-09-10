@@ -14,6 +14,11 @@ var upnp = require("upnp-ts");
 
 let client = new upnp.Client();
 
+//subscribe to debug messages
+client.on('debug', (msg) => {
+    console.warn('debug: ', msg);
+});
+
 //callback for once a device is found
 client.onOneOf(['WANConnectionDevice', 'WANPPPConnection', 'LANDevice'], function( gateway ) {
     gateway.getService('WANIPConnection', function (service) {

@@ -36,3 +36,10 @@ client.onOneOf(['WANConnectionDevice', 'WANPPPConnection', 'LANDevice'], functio
 
     });
 });
+
+setInterval(()=>{
+	let devices = client.getDevices();
+	for (let device of devices){
+		console.warn("DEVICE: ", device.ip, device.devicetype);
+	}
+}, 24000);

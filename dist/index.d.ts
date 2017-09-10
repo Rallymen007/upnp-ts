@@ -9,6 +9,7 @@ declare module Upnp {
         constructor(opts?: any);
         _debug(msg: any): void;
         onOneOf(events: Array<string>, fn: any): void;
+        getDevices(): Array<Device>;
         registerDevice(d: Device): void;
         search(searchtype?: string): void;
     }

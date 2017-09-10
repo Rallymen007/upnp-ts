@@ -1,4 +1,4 @@
-﻿import xml = require('xml-parser/index.js');
+import xml = require('xml-parser/index.js');
 import http = require('http');
 import { EventEmitter } from 'events';
 import { Service } from './service';
@@ -22,6 +22,10 @@ export class Device extends EventEmitter {
         //find base url
         this.baseurl = this.location.substr(0, this.location.lastIndexOf("/"));
 
+    }
+    
+    getServices():Array<Service> {
+        return this._services;
     }
 
     update(d: Device): void {

@@ -13,7 +13,9 @@
         "outDir": "dist",
         "types": ["node"],
         "typeRoots": [ "node_modules/@types" ],
-		"removeComments": true
+		"removeComments": true,
+		"noImplicitThis": true,
+		"noUnusedLocals": true
     },
     "exclude": [
         "dist",

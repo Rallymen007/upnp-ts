@@ -1,11 +1,12 @@
 {
   "name": "upnp-ts",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "upnp for nodejs written in typescript",
   "main": "dist/index.js",
   "scripts": {
     "prepublish": "npm run tsc",
-    "test": "node test/test.js",
+    "test": "npm run tsc && npm run _test",
+    "_test": "node test/test.js",
     "tsc": "tsc --module commonjs",
     "watch": "tsc -w --module commonjs"
   },

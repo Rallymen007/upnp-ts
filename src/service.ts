@@ -19,7 +19,6 @@ export class Service {
     }
 
     post(action: string, args: any) {
-        let __this = this;
         return new Promise<any>((resolve, reject) => {
             this._soap.post(action, args, (res: string) => { resolve(res); }, (err: any) => { reject(err); });
         });
