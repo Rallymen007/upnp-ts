@@ -62,6 +62,12 @@ module Upnp {
                 });
             }
         }
+        
+        stopSearch(){
+            for (let s of this._ssdps) {
+                s.shutdown();
+            }
+        }
     }
 }
 

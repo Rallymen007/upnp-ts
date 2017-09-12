@@ -8,6 +8,7 @@ client.on('debug', (msg) => {
 client.search('urn:schemas-upnp-org:device:InternetGatewayDevice:1');
 client.onOneOf(['WANConnectionDevice', 'WANPPPConnection', 'LANDevice'], function (d) {
     console.warn("got WANConnectionDevice", d.devicetype);
+    client.stopSearch(); //we've found the device we were searching for... shut down search sockets.
     d.getService('WANIPConnection', function (service) {
         service.post('GetExternalIPAddress', []).then((external) => {
             console.warn('got data', external);

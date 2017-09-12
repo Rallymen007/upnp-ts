@@ -26,6 +26,10 @@ export class SSDP extends EventEmitter {
            this._skt.addMembership(BROADCAST_ADDR, this._ip);
         });
     }
+    
+    shutdown(){
+        this._skt.close();
+    }
 
     headersToObj(headers: string): Object {
         let ret: any = [];

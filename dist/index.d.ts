@@ -12,6 +12,7 @@ declare module Upnp {
         getDevices(): Array<Device>;
         registerDevice(d: Device): void;
         search(searchtype?: string): void;
+        stopSearch(): void;
     }
 }
 export = Upnp;

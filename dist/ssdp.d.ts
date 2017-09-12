@@ -7,6 +7,7 @@ export declare class SSDP extends EventEmitter {
     constructor(_debug: {
         (d: any): void;
     }, _ip: string);
+    shutdown(): void;
     headersToObj(headers: string): Object;
     processMessage(msg: string, info: Object): void;
     search(st: string): void;
