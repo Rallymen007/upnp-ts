@@ -10,6 +10,7 @@ export class Device extends EventEmitter {
     server: string;
     devicetype: string;
     baseurl: string = "";
+	friendlyName: string = "";
     _services: Array<Service> = [];
 
     constructor(private _debug: { (d:any): void }, network: string, msg: any, info: any) {
@@ -18,7 +19,7 @@ export class Device extends EventEmitter {
         this.ip = info.address;
         this.location = msg['LOCATION'];
         this.server = msg['SERVER'];
-
+		
         //find base url
         this.baseurl = this.location.substr(0, this.location.lastIndexOf("/"));
 
@@ -50,6 +51,10 @@ export class Device extends EventEmitter {
             this.devicetype = s;
         }
     }
+	
+	parseFriendlyName(s: string){
+		this.friendlyName = s;
+	}
 
     getService(serviceType: string, cb: Function): void {
         for (let s of this._services) {
@@ -102,6 +107,9 @@ export class Device extends EventEmitter {
                         case 'deviceList':
                             this.parseDevices(attribs.children);
                             break;
+						case 'friendlyName':
+							this.parseFriendlyName(attribs.content);
+							break;
                         default:
                         //console.warn( 'unknown attrib', attribs.name );
 

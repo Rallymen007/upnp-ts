@@ -9,6 +9,7 @@ export declare class Device extends EventEmitter {
     server: string;
     devicetype: string;
     baseurl: string;
+    friendlyName: string;
     _services: Array<Service>;
     constructor(_debug: {
         (d: any): void;
@@ -17,6 +18,7 @@ export declare class Device extends EventEmitter {
     update(d: Device): void;
     toString(): string;
     parseDeviceType(s: string): void;
+    parseFriendlyName(s: string): void;
     getService(serviceType: string, cb: Function): void;
     parseServices(items: any): void;
     parseDevices(devices: any): void;

@@ -1,6 +1,6 @@
 {
   "name": "upnp-ts",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "upnp for nodejs written in typescript",
   "main": "dist/index.js",
   "scripts": {
@@ -23,7 +23,7 @@
   "devDependencies": {
     "ts-node": "^3.0.2",
     "tsc-watch": "^1.0.8",
-    "typescript": "^2.5.1"
+    "typescript": "^3.9.7"
   },
   "dependencies": {
     "@types/bluebird": "^3.5.8",

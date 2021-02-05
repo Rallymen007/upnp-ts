@@ -9,6 +9,6 @@ export declare class USoap {
     constructor(_debug: {
         (d: any): void;
     }, _endpoint: string, _ns: string);
-    private _createBody(action, arg);
+    private _createBody;
     post(action: string, data: any, cb: Function, err: Function): void;
 }
