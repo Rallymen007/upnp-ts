@@ -1,34 +1,38 @@
 {
-  "name": "upnp-ts",
-  "version": "0.0.9",
-  "description": "upnp for nodejs written in typescript",
-  "main": "dist/index.js",
-  "scripts": {
-    "prepublish": "npm run tsc",
-    "test": "npm run tsc && npm run _test",
-    "_test": "node test/test.js",
-    "tsc": "tsc --module commonjs",
-    "watch": "tsc -w --module commonjs"
+  "author": {
+    "name": "Davin Thompson"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://bitbucket.org/dthompso99/node-upnp.git"
-  },
-  "keywords": [
-    "upnp"
-  ],
-  "author": "Davin Thompson",
-  "license": "ISC",
-  "homepage": "https://bitbucket.org/dthompso99/node-upnp#readme",
-  "devDependencies": {
-    "ts-node": "^3.0.2",
-    "tsc-watch": "^1.0.8",
-    "typescript": "^3.9.7"
-  },
+  "bundleDependencies": false,
   "dependencies": {
     "@types/bluebird": "^3.5.8",
     "@types/node": "^8.0.26",
     "@types/xml-parser": "^1.2.29",
     "xml-parser": "^1.2.1"
-  }
+  },
+  "deprecated": false,
+  "description": "upnp for nodejs written in typescript",
+  "devDependencies": {
+    "ts-node": "^3.0.2",
+    "tsc-watch": "^1.0.8",
+    "typescript": "^3.9.7"
+  },
+  "homepage": "https://bitbucket.org/dthompso99/node-upnp#readme",
+  "keywords": [
+    "upnp"
+  ],
+  "license": "ISC",
+  "main": "dist/index.js",
+  "name": "upnp-ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://bitbucket.org/dthompso99/node-upnp.git"
+  },
+  "scripts": {
+    "_test": "node test/test.js",
+    "prepublish": "npm run tsc",
+    "test": "npm run tsc && npm run _test",
+    "tsc": "tsc --module commonjs",
+    "watch": "tsc -w --module commonjs"
+  },
+  "version": "0.0.10"
 }

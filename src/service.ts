@@ -34,13 +34,13 @@ export class Service {
                     this.serviceType = this.parseServiceType(i.content);
                     break;
                 case "controlURL":
-                    this.controlURL = i.content;
+                    this.controlURL = i.content.startsWith("/")?i.content:("/" + i.content);
                     break;
                 case "eventSubURL":
-                    this.eventSubURL = i.content;
+                    this.eventSubURL = i.content.startsWith("/")?i.content:("/" + i.content);
                     break;
                 case "SCPDURL":
-                    this.SCPDURL = i.content;
+                    this.SCPDURL = i.content.startsWith("/")?i.content:("/" + i.content);
                     break;
             }
         }
