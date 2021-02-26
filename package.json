@@ -34,5 +34,5 @@
     "tsc": "tsc --module commonjs",
     "watch": "tsc -w --module commonjs"
   },
-  "version": "0.0.10"
+  "version": "0.0.11"
 }

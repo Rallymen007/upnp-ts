@@ -1,4 +1,5 @@
 ﻿import { USoap } from "./util";
+import * as http from "http";
 
 export class Service {
     baseurl: string;
@@ -46,4 +47,79 @@ export class Service {
         }
         this._soap = new USoap(this._debug, this.baseurl + this.controlURL, this.ns);
     }
+
+	sid: string;
+	timeoutHandle : ReturnType<typeof setTimeout>;
+	subscribe(callback: string){
+		let service = this;
+		let url = new URL(this.baseurl + this.eventSubURL);
+		let req = http.request({
+			host: url.hostname,
+			port: url.port,
+			path: url.pathname + url.search,
+			method: 'SUBSCRIBE',
+			headers: {
+				HOST: url.host,
+				CALLBACK: "<"+callback+">", 
+				NT: "upnp:event"
+			}
+		},function(rsp:http.IncomingMessage){
+			let sid = rsp.headers['sid'] as string;
+			let timeout0 = rsp.headers['timeout'] as string;
+			let timeout = timeout0 && parseInt(timeout0.replace("Second-","")) || 1800;
+			service.sid = sid;
+			clearTimeout(service.timeoutHandle);
+			service.timeoutHandle = setTimeout(function(){
+				service.renew();
+			},(timeout-1)*1000);
+		});
+		req.end();
+	}
+	
+	renew(){
+		if (this.sid) {
+			let service =  this;
+		let url = new URL(this.baseurl + this.eventSubURL);
+			var req = http.request({
+				host: url.hostname,
+				port: url.port,
+				path: url.pathname + url.search,
+				method: 'SUBSCRIBE',
+				headers: {
+					HOST: url.host,
+					SID: service.sid
+				}
+			},function(rsp){
+				let timeout0 = rsp.headers['timeout'] as string;
+				let timeout = timeout0 && parseInt(timeout0.replace("Second-","")) || 1800;
+				clearTimeout(service.timeoutHandle);
+				service.timeoutHandle = setTimeout(function(){
+					service.renew();
+				},(timeout-1)*1000);
+			});
+			req.end();
+		}
+	}
+	
+	unsubscribe(){
+		clearTimeout(this.timeoutHandle);
+		this.timeoutHandle = null;
+		if (this.sid) {
+		let url = new URL(this.baseurl + this.eventSubURL);
+			let req = http.request({
+				host: url.hostname,
+				port: url.port,
+				path: url.pathname +  url.search,
+				method: 'UNSUBSCRIBE',
+				headers: {
+					HOST: url.host,
+					SID: this.sid
+				}
+			},function(rsp){
+				
+			});
+			req.end();
+			this.sid = null;
+		}
+	}
 }

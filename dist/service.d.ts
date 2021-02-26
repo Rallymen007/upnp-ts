@@ -13,4 +13,9 @@ export declare class Service {
     constructor(_debug: {
         (d: any): void;
     }, baseurl: string, data: any);
+    sid: string;
+    timeoutHandle: ReturnType<typeof setTimeout>;
+    subscribe(callback: string): void;
+    renew(): void;
+    unsubscribe(): void;
 }
